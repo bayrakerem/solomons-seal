@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Solomon's Seal – Delete account</title><link rel="stylesheet" href="style.css"></head><body><main>
+<nav><a href="index.html">Solomon's Seal</a><a href="privacy.html">Privacy</a><a href="support.html">Support</a></nav>
+<h1>Delete your account and data</h1>
+<p>Solomon's Seal (developer: Kerem Emre Bayrak) creates an anonymous player account when you first open the game. It stores your nickname, avatar, level, stars, league entry and friend list. No email, name or phone number is collected.</p>
+
+<h2>In the game (instant)</h2>
+<div class="card">Open <b>Profile → Settings → Delete my account</b>. Your account, league entry, friend list and progress are removed from our server immediately.</div>
+
+<h2>Without the game</h2>
+<p>If you no longer have the game installed, send a request below. Your <b>player ID</b> is shown at the bottom of the Settings screen (8 characters); your <b>friend code</b> is on the Profile screen. Either one is enough.</p>
+<form id="f" class="card">
+  <label>Player ID or friend code<br><input id="player" required maxlength="64" style="width:100%;padding:8px;font-size:16px"></label><br><br>
+  <label>Nickname (optional)<br><input id="nick" maxlength="40" style="width:100%;padding:8px;font-size:16px"></label><br><br>
+  <button type="submit" style="padding:10px 18px;font-size:16px">Request deletion</button>
+  <p id="msg"></p>
+</form>
+<h2>What is deleted, and when</h2>
+<p>Everything linked to the account is deleted within 30 days of a web request: account record, nickname, avatar, progress, league entry and friend list. Nothing is kept. Purchase records are held by Apple / Google, not by us; ad data is handled by Google AdMob under its own policy.</p>
+
+<h1 style="margin-top:48px">Hesabını ve verilerini sil</h1>
+<p><b>Oyunda (anında):</b> Profil → Ayarlar → Hesabımı sil.</p>
+<p><b>Oyun yüklü değilse:</b> yukarıdaki forma oyuncu kimliğini (Ayarlar ekranının altında, 8 karakter) ya da arkadaş kodunu yaz. Hesabına bağlı her şey (kayıt, takma ad, ilerleme, lig, arkadaş listesi) 30 gün içinde silinir.</p>
+<script>
+document.getElementById('f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const m = document.getElementById('msg'); m.textContent = 'Sending…';
+  try {
+    const r = await fetch('https://igdehohurzrvleicydkz.supabase.co/rest/v1/rpc/cm_request_deletion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: 'sb_publishable_SldLYTtd3wYg4Erbq1eQQA_RWgRpoZE' },
+      body: JSON.stringify({ p_player: document.getElementById('player').value, p_nick: document.getElementById('nick').value || null, p_note: 'web' })
+    });
+    const ok = r.ok && (await r.json()) === true;
+    m.textContent = ok ? 'Request received. Your data will be deleted within 30 days.' : 'Something went wrong. Please check the ID and try again.';
+  } catch { m.textContent = 'Network error. Please try again.'; }
+});
+</script>
+</main></body></html>
